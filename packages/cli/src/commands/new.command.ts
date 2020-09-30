@@ -103,6 +103,14 @@ async function askGeneralModules(basePath: string /*_dryRun: boolean */): Promis
             options: { path: basePath },
           },
         },
+        {
+          name: 'Convert to microservice?',
+          short: 'microservice',
+          value: {
+            name: 'microservice',
+            options: { path: basePath },
+          }
+        },
       ],
     },
     {
