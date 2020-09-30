@@ -22,6 +22,7 @@
     "@angular-devkit/schematics": "^10.0.5",
     "@angular-devkit/schematics-cli": "^0.1000.5",
     "@nestjs/cli": "^7.0.2",
+    "@nestjs/microservices": "^7.4.4",
     "@nestjs/schematics": "^7.0.0",
     "@schematics/angular": "^10.0.5",
     "chalk": "^4.0.0",

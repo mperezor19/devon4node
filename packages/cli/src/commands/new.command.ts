@@ -330,6 +330,11 @@ export function builder(args: yargs.Argv): yargs.Argv {
       alias: 'j',
       describe: 'Allow to add Auth JWT module or not.',
       type: 'boolean',
+    })
+    .option('microservice', {
+      alias: 'x',
+      describe: 'Create a microservice app',
+      type: 'boolean'
     });
 }
 
@@ -495,41 +500,50 @@ export async function generateCode(args: yargs.Arguments<any>): Promise<void> {
         path: name,
       },
     });
-  }
 
-  const file = await tmp.file();
-  writeFileSync(file.path, JSON.stringify(allInOne));
-
-  inputs.push({ name: 'path', value: '"' + file.path + '"' });
-  if (args.d) {
-    inputs.push({ name: 'dry-run', value: !!args.d });
-  }
-
-  await generateApplicationFiles('@devon4node/schematics:all-in-one', inputs);
-
-  if (!args.d) {
-    if (!args.g) {
-      await initGit(name);
+    if (args.x) {
+      allInOne.push({
+        name: 'microservice',
+        options: {
+          path: name,
+        },
+      });
     }
-    if (!args.s) {
-      await installPackages(name);
+
+    const file = await tmp.file();
+    writeFileSync(file.path, JSON.stringify(allInOne));
+
+    inputs.push({ name: 'path', value: '"' + file.path + '"' });
+    if (args.d) {
+      inputs.push({ name: 'dry-run', value: !!args.d });
     }
+
+    await generateApplicationFiles('@devon4node/schematics:all-in-one', inputs);
+
+    if (!args.d) {
+      if (!args.g) {
+        await initGit(name);
+      }
+      if (!args.s) {
+        await installPackages(name);
+      }
+    }
+
+    printCollective();
   }
 
-  printCollective();
-}
+  /**
+   * New command handler.
+   *
+   * @param args program arguments
+   */
+  export async function handler(args: yargs.Arguments): Promise<void> {
+    args.name = strings.dasherize(args.name as string);
 
-/**
- * New command handler.
- *
- * @param args program arguments
- */
-export async function handler(args: yargs.Arguments): Promise<void> {
-  args.name = strings.dasherize(args.name as string);
+    if (args.n) {
+      await generateCode(args);
+    } else {
+      await generateCodeInteractive(true, args);
+    }
 
-  if (args.n) {
-    await generateCode(args);
-  } else {
-    await generateCodeInteractive(true, args);
   }
-}

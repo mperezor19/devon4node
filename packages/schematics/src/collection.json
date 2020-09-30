@@ -96,6 +96,10 @@
       "factory": "./lib/pipe/pipe.factory#main",
       "description": "Create a Nest pipe.",
       "schema": "./lib/pipe/schema.json"
+    },
+    "microservice": {
+      "factory": "./lib/microservice/microservice.factory#microservice",
+      "description": "Creates a microservice"
     }
   }
 }
